@@ -6,7 +6,6 @@ import {
   parseDay,
   parseMonth,
   fmtPeriod,
-  fmtPeriodLong,
   yearsSince,
   mergeLogs,
   backlinks,
@@ -48,11 +47,9 @@ test('parseDay and parseMonth: strict formats, UTC', () => {
   assert.throws(() => parseMonth('TODO'), /Invalid month "TODO"/);
 });
 
-test('fmtPeriod and fmtPeriodLong', () => {
+test('fmtPeriod', () => {
   assert.equal(fmtPeriod('2026-01'), '2026-01 → now');
   assert.equal(fmtPeriod('2023-06', '2025-12'), '2023-06 → 2025-12');
-  assert.equal(fmtPeriodLong('2026-01'), 'Jan 2026 — present');
-  assert.equal(fmtPeriodLong('2023-06', '2025-12'), 'Jun 2023 — Dec 2025');
   assert.throws(() => fmtPeriod('2026'), /Invalid month "2026"/);
 });
 

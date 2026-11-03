@@ -14,6 +14,17 @@ export interface Contribution {
 }
 
 export const contributions: Contribution[] = [
+  {
+    repo: 'spring-cloud/spring-cloud-gateway',
+    number: 4128,
+    title: 'refactor: use functional streams for host and path predicate accumulation',
+    url: 'https://github.com/spring-cloud/spring-cloud-gateway/pull/4128',
+    status: 'merged',
+    date: '2026-03-30',
+    impact: 'Made the Spring MVC host and path predicate logic easier to maintain with the Java Streams API, plus Javadocs on critical methods. Shipped in the stable release.',
+    additions: 17,
+    deletions: 12,
+  },
   // {
   //   repo: 'owner/name',
   //   number: 123,

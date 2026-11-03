@@ -61,7 +61,6 @@ export interface TimelineItem {
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH = /^\d{4}-\d{2}$/;
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
 const WIKILINK = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
 
@@ -84,14 +83,6 @@ export function fmtPeriod(start: string, end?: string): string {
   if (end) parseMonth(end);
   return `${start} → ${end ?? 'now'}`;
 }
-
-function longMonth(s: string): string {
-  const d = parseMonth(s);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-}
-
-export const fmtPeriodLong = (start: string, end?: string) =>
-  `${longMonth(start)} — ${end ? longMonth(end) : 'present'}`;
 
 export const yearsSince = (start: string, now = new Date()) =>
   Math.round((+now - +parseMonth(start)) / YEAR_MS);

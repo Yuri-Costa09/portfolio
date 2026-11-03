@@ -16,7 +16,7 @@ npm run build    # gera dist/
 | O quê | Onde |
 | --- | --- |
 | Nome, tagline, apresentação, status, links | `src/config.ts` |
-| Experiência (home, `/cv/` e PDF) | `src/data/cv.ts` |
+| Experiência | `src/data/experience.ts` |
 | Contribuições open source | `src/data/oss.ts` |
 | Posts | `src/content/posts/*.md` |
 | Notas | `src/content/notes/*.md` |
@@ -49,7 +49,7 @@ Cada contribuição é um item em `src/data/oss.ts`: repositório, número do PR
 
 ## Experiência
 
-Em `src/data/cv.ts`, cada emprego tem `start` e, se já acabou, `end`, no formato `YYYY-MM`. A data de início também aparece no `tail ~/log` do topo da home.
+Em `src/data/experience.ts`, cada emprego tem `start` e, se já acabou, `end`, no formato `YYYY-MM`. A data de início também aparece no `tail ~/log` do topo da home.
 
 ## Escrever no Obsidian
 
@@ -62,17 +62,6 @@ Para escrever direto do seu vault, você pode:
   `ln -s ~/Obsidian/03-Recursos/Publicar src/content/notes`
 
 Só vai para o site o que estiver nessas pastas.
-
-## PDF do currículo
-
-A página `/cv/` existe só para gerar o PDF: não aparece no menu nem no sitemap.
-
-```bash
-npm run build
-pip install playwright && playwright install chromium
-python scripts/cv_pdf.py   # gera public/cv.pdf a partir de /cv/
-npm run build              # copia o PDF para dist/
-```
 
 ## Publicar
 

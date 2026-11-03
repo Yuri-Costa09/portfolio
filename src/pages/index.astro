@@ -7,14 +7,14 @@ import OssList from '../components/OssList.astro';
 import LogList from '../components/LogList.astro';
 import Links from '../components/Links.astro';
 import { site } from '../config';
-import { cv } from '../data/cv';
+import { experience } from '../data/experience';
 import { getLogs, getTimeline, sortedContributions } from '../lib/content';
 import { ossSummary, yearsSince } from '../lib/logs';
 
 const logs = await getLogs();
 const timeline = (await getTimeline()).slice(0, 6);
 const oss = sortedContributions();
-const years = Math.max(...cv.experience.map((j) => yearsSince(j.start)));
+const years = Math.max(...experience.map((j) => yearsSince(j.start)));
 
 // Numbers follow what is actually shown: "open source" disappears when the list is empty.
 const sections = ['experience', ...(oss.length > 0 ? ['oss'] : []), 'logs', 'links'];
@@ -39,7 +39,7 @@ const num = (key: string) => sections.indexOf(key) + 1;
   <div class="wrap">
     <section id="experience" aria-labelledby="h-experience">
       <SectionHead n={num('experience')} title="experience" id="h-experience">{years >= 1 && `~${years} yrs`}</SectionHead>
-      <Experience jobs={cv.experience} />
+      <Experience jobs={experience} />
     </section>
 
     {oss.length > 0 && (

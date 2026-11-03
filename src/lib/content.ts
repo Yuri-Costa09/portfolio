@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content';
 import { mergeLogs, buildTimeline } from './logs';
 import { contributions } from '../data/oss';
-import { cv } from '../data/cv';
+import { experience } from '../data/experience';
 
 // Drafts show up in `npm run dev` only.
 const live = (e: { data: { draft?: boolean } }) => import.meta.env.DEV || !e.data.draft;
@@ -21,7 +21,7 @@ export async function getLogs() {
 
 // Logs, contributions and job starts, newest first (the hero's `tail ~/log`).
 export async function getTimeline() {
-  return buildTimeline(await getLogs(), contributions, cv.experience);
+  return buildTimeline(await getLogs(), contributions, experience);
 }
 
 export const sortedContributions = () => [...contributions].sort((a, b) => b.date.localeCompare(a.date));
