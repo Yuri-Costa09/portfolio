@@ -1,9 +1,0 @@
----
-import ListPage from '../../layouts/ListPage.astro';
-import ProjectList from '../../components/ProjectList.astro';
-import { getProjects } from '../../lib/content';
-const projects = await getProjects();
----
-<ListPage title="Projects" lede="Things I built, with the problem, the decisions and what I would change." current="projects">
-  <ProjectList projects={projects} />
-</ListPage>

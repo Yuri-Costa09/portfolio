@@ -1,9 +1,0 @@
----
-import ListPage from '../../layouts/ListPage.astro';
-import PostList from '../../components/PostList.astro';
-import { getPosts } from '../../lib/content';
-const posts = await getPosts();
----
-<ListPage title="Writing" lede="Essays on systems, written to understand them properly." current="writing">
-  <PostList posts={posts} />
-</ListPage>

@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-// Long-form, finished writing.
+// Long-form, finished writing. Shown as POST in the log feed.
 const posts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
   schema: z.object({
@@ -15,7 +15,7 @@ const posts = defineCollection({
   }),
 });
 
-// Digital garden: short, evolving notes. Write them in Obsidian, link with [[note-name]].
+// Short, evolving notes. Shown as NOTE in the log feed. Write them in Obsidian, link with [[note-name]].
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
   schema: z.object({
@@ -28,17 +28,4 @@ const notes = defineCollection({
   }),
 });
 
-// Things you built: problem, decisions, trade-offs.
-const projects = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    status: z.enum(['active', 'paused', 'done']),
-    stack: z.array(z.string()).default([]),
-    repo: z.string().url().optional(),
-    order: z.number().default(0),
-  }),
-});
-
-export const collections = { posts, notes, projects };
+export const collections = { posts, notes };
