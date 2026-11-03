@@ -2,9 +2,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { wikilinks } from './src/lib/wikilinks.mjs';
 
-// Change `site` to your real domain before deploying.
+// Production domain (GitHub Pages custom domain).
 export default defineConfig({
-  site: 'https://yuri.dev',
+  site: 'https://yuricosta.dev',
   trailingSlash: 'always',
   integrations: [sitemap()],
   markdown: {
