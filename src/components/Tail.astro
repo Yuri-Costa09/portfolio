@@ -1,0 +1,34 @@
+---
+import type { TimelineItem } from '../lib/logs';
+import { fmtDate } from '../lib/logs';
+
+interface Props {
+  items: TimelineItem[];
+}
+const { items } = Astro.props;
+---
+<div class="tail">
+  <div class="h"><span>tail ~/log</span><span>last {items.length}</span></div>
+  <ol>
+    {items.map((i) => (
+      <li>
+        <a href={i.href}>
+          <time class="mute" datetime={i.date.toISOString()}>{fmtDate(i.date)}</time>
+          <span class={`kind kind-${i.kind}`}>{i.kind}</span>
+          <span class="label">{i.label}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .tail { min-width: 0; border: 1px solid var(--line); background: #0d0d0c; font-size: 13px; }
+  .h { display: flex; justify-content: space-between; padding: 9px 16px; border-bottom: 1px solid var(--line); color: var(--mute); }
+  ol { list-style: none; margin: 0; padding: 0; }
+  li:nth-child(even) { background: var(--bg-2); }
+  a { display: grid; grid-template-columns: 10ch 4ch minmax(0, 1fr); gap: 12px; padding: 9px 16px; }
+  .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  a:hover .label { color: var(--amber); }
+  @media (max-width: 420px) { a { gap: 8px; padding-inline: 12px; } }
+</style>

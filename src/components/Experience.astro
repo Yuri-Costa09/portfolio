@@ -1,0 +1,36 @@
+---
+import type { Job } from '../data/cv';
+import { fmtPeriod } from '../lib/logs';
+
+interface Props {
+  jobs: Job[];
+}
+const { jobs } = Astro.props;
+---
+<ol class="jobs">
+  {jobs.map((j) => (
+    <li>
+      <span class="when mute">{fmtPeriod(j.start, j.end)}</span>
+      <div>
+        <h3>{j.role}<span class="org mute">@ {j.org}</span></h3>
+        <ul>{j.bullets.map((b) => <li>{b}</li>)}</ul>
+      </div>
+    </li>
+  ))}
+</ol>
+<a class="btn" href="/cv.pdf" download>↓ cv.pdf</a>
+
+<style>
+  .jobs { list-style: none; margin: 0; padding: 0; }
+  .jobs > li { display: grid; grid-template-columns: 22ch minmax(0, 1fr); gap: 6px 24px; padding: 18px 0; }
+  .jobs > li + li { border-top: 1px solid var(--line); }
+  .when { font-size: 13px; padding-top: 3px; }
+  h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .org { font-size: 14px; font-weight: 400; letter-spacing: 0; margin-left: 10px; }
+  ul { list-style: none; padding: 0; margin-top: 10px; display: grid; gap: 6px; color: var(--dim); max-width: var(--measure); }
+  ul li { padding-left: 2ch; text-indent: -2ch; }
+  ul li::before { content: '> '; color: var(--amber); }
+  .btn { display: inline-block; margin-top: 18px; border: 1px solid var(--amber); color: var(--amber); padding: 8px 16px; font-size: 13px; font-weight: 600; }
+  .btn:hover { background: var(--amber); color: var(--bg); }
+  @media (max-width: 640px) { .jobs > li { grid-template-columns: 1fr; } }
+</style>

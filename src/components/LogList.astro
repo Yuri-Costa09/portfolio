@@ -1,0 +1,43 @@
+---
+import type { Log } from '../lib/logs';
+import { fmtDate } from '../lib/logs';
+
+interface Props {
+  logs: Log[];
+}
+const { logs } = Astro.props;
+---
+{logs.length === 0 ? (
+  <p class="empty mute">no entries yet</p>
+) : (
+  <ul class="logs">
+    {logs.map((l) => (
+      <li>
+        <a href={l.href}>
+          <time class="mute" datetime={l.date.toISOString()}>{fmtDate(l.date)}</time>
+          <span class={`kind kind-${l.kind}`}>{l.kind}</span>
+          <span class="t">{l.title}</span>
+          <span class="meta mute">{l.meta}</span>
+          <span class="sum mute">{l.summary}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .logs { list-style: none; margin: 0; padding: 0; }
+  li + li { border-top: 1px solid var(--line); }
+  a { display: grid; grid-template-columns: 10ch 4ch minmax(0, 1fr) auto; gap: 4px 16px; align-items: baseline; padding: 16px 0; }
+  time, .kind, .meta { font-size: 13px; }
+  .t { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+  a:hover .t { color: var(--amber); }
+  .sum { grid-column: 3 / -1; max-width: var(--measure); }
+  .empty { padding: 16px 0; }
+  @media (max-width: 640px) {
+    a { grid-template-columns: 10ch 1fr auto; }
+    .meta { grid-column: 3; grid-row: 1; }
+    .t { grid-column: 1 / -1; grid-row: 2; }
+    .sum { grid-column: 1 / -1; grid-row: 3; }
+  }
+</style>

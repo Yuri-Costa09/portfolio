@@ -1,0 +1,21 @@
+---
+import { site } from '../config';
+---
+<ul class="links">
+  {site.links.map((l) => (
+    <li>
+      <a href={l.href}><span class="cmd">{l.cmd}</span><span class="to mute">{l.label}</span></a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
+  li { border-top: 1px solid var(--line); }
+  a { display: grid; grid-template-columns: 18ch minmax(0, 1fr); gap: 12px; padding: 12px 0; }
+  .cmd { font-weight: 600; }
+  .cmd::before { content: '$ '; color: var(--amber); }
+  a:hover .cmd { color: var(--amber); }
+  .to { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (max-width: 720px) { .links { grid-template-columns: 1fr; } }
+</style>

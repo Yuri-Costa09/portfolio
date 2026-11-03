@@ -1,0 +1,25 @@
+---
+// "01 experience ─────────── meta". The number is optional; the slot is the right-hand meta.
+interface Props {
+  title: string;
+  n?: number;
+  id?: string;
+}
+const { title, n, id } = Astro.props;
+---
+<div class="sh">
+  <h2 id={id}>{n !== undefined && <span class="n">{String(n).padStart(2, '0')}</span>}{title}</h2>
+  <span class="ln" aria-hidden="true"></span>
+  <span class="meta"><slot /></span>
+</div>
+
+<style>
+  .sh { display: flex; align-items: center; gap: 14px; padding: clamp(40px, 7vw, 64px) 0 18px; font-size: 13px; color: var(--mute); }
+  h2 { font-size: clamp(20px, 3vw, 26px); font-weight: 800; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; }
+  .n { color: var(--amber); font-weight: 500; font-size: 14px; margin-right: 12px; vertical-align: 3px; }
+  .ln { flex: 1; min-width: 24px; height: 1px; background: var(--line); }
+  .meta { white-space: nowrap; }
+  .meta:empty { display: none; }
+  .meta :global(a) { color: var(--amber); }
+  .meta :global(a:hover) { text-decoration: underline; }
+</style>
