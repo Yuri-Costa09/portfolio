@@ -39,7 +39,7 @@ export const experience: Job[] = [
     start: '2023-11',
     end: '2025-08',
     bullets: [
-      'Part-time, remote: custom backend and web systems for international clients.',
+      'Remote: custom backend and web systems for international clients.',
       'Caching for the mobile product listing: ~275 ms down to ~7 ms (~40× faster).',
       'REST APIs in Spring Boot and Ruby on Rails, shipped as Docker containers on AWS EC2 behind Nginx with Certbot TLS.',
     ],
