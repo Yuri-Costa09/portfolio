@@ -15,11 +15,11 @@ export const experience: Job[] = [
     org: 'Mercado Livre (Mercado Pago)',
     start: '2026-04',
     bullets: [
-      'Clearing and settlement at Mercado Pago, one of Latin America’s largest payment acquirers (US$ 100B+ in payment volume per quarter).',
+      'Payment processing and clearing at Mercado Pago, one of Latin America’s largest payment acquirers (US$ 100B+ in payment volume per quarter).',
       'Built a Visa simulator for E2E testing: certification cycles went from ~24 hours to a few minutes (>99% less). Adopted by all 5 clearing teams (~50 engineers) and used to certify 3+ business initiatives.',
       'Go and Java microservices with hexagonal and clean architecture, backed by E2E test suites, guarding transaction integrity on critical flows.',
       'Circuit breakers, rate limiting and idempotency guarantees against cascading failures and duplicate transactions. Owned mission-critical production releases.',
-      'On call for clearing and settlement: production incidents traced to root cause with Datadog (APM, tracing, logs, monitors) and Grafana.',
+      'On call for payment processing and clearing: production incidents traced to root cause with Datadog (APM, tracing, logs, monitors) and Grafana.',
     ],
   },
   {
