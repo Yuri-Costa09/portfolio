@@ -15,4 +15,4 @@ When you read one `int64`, the whole line around it comes into L1. Two consequen
 
 The same block granularity is what the coherence protocol (MESI and its variants) tracks between cores. That's the root of [[false-sharing]].
 
-Related: the human-scale view of these costs in the post on latency numbers.
+Related: the human-scale view of these costs in the post on [[latency-on-a-human-scale|latency numbers]].

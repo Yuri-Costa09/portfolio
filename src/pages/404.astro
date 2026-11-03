@@ -2,14 +2,24 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Not found">
-  <div class="wrap nf">
-    <h1 class="display">404</h1>
-    <p>This page does not exist. It may have been a note that got merged into another one.</p>
-    <p><a href="/">Back to the home page</a></p>
-  </div>
+  <section class="wrap nf">
+    <h1>404</h1>
+    <p class="err">bash: cd: <span class="path">this page</span>: No such file or directory</p>
+    <ul class="next">
+      <li><a href="/">$ cd ~</a></li>
+      <li><a href="/logs/">$ ls /logs</a></li>
+    </ul>
+  </section>
+  <script is:inline>
+    document.querySelector('.nf .path').textContent = location.pathname;
+  </script>
 </Base>
+
 <style>
-  .nf { padding-top: clamp(48px, 8vw, 120px); }
-  h1 { font-size: clamp(6rem, 25vw, 18rem); line-height: 0.8; color: var(--blue); }
-  p { font-size: 1.25rem; max-width: 40ch; }
+  .nf { padding-top: clamp(48px, 9vw, 120px); }
+  h1 { font-size: clamp(5rem, 22vw, 12rem); font-weight: 800; line-height: 0.85; letter-spacing: -0.07em; color: var(--amber); }
+  .err { margin-top: 24px; color: var(--dim); overflow-wrap: anywhere; }
+  .next { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 24px; }
+  .next a { color: var(--amber); font-weight: 600; }
+  .next a:hover { text-decoration: underline; }
 </style>

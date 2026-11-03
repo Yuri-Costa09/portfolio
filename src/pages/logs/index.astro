@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import LogList from '../../components/LogList.astro';
+import { getLogs } from '../../lib/content';
+
+const logs = await getLogs();
+---
+<Base title="Logs" description="Posts and notes: finished writing and a working notebook." current="logs">
+  <div class="wrap">
+    <header class="top">
+      <p class="mute">$ ls -t ~/logs</p>
+      <h1>logs</h1>
+      <p class="lede dim">
+        Posts are finished pieces, each answering one question from the ground up. Notes are a working notebook:
+        short, linked to each other, rewritten as I learn. A seedling is rough, growing is taking shape, evergreen I'd
+        defend in a review.
+      </p>
+    </header>
+    <SectionHead title="all entries" id="h-all">{logs.length} entries · <a href="/rss.xml">rss</a></SectionHead>
+    <LogList logs={logs} />
+  </div>
+</Base>
+
+<style>
+  .top { padding-top: clamp(40px, 7vw, 80px); font-size: 13px; }
+  h1 { margin: 12px 0 0 -0.04em; font-size: clamp(3.5rem, 12vw, 7rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.07em; }
+  .lede { max-width: 62ch; margin-top: 22px; font-size: 15px; }
+</style>

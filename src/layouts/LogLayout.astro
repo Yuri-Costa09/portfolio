@@ -1,0 +1,79 @@
+---
+import Base from './Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import LogList from '../components/LogList.astro';
+import type { Log } from '../lib/logs';
+import { fmtDate } from '../lib/logs';
+
+interface Props {
+  log: Log;
+  linkedFrom: Log[];
+}
+const { log, linkedFrom } = Astro.props;
+const tags = log.entry.data.tags ?? [];
+const updated = log.kind === 'post' ? log.entry.data.updated : undefined;
+---
+<Base title={log.title} description={log.summary} current="logs">
+  <article class="wrap">
+    <header class="head">
+      <a class="back" href="/logs/">← cd ../logs</a>
+      <p class="meta mute">
+        <time datetime={log.date.toISOString()}>{fmtDate(log.date)}</time>
+        <span class={`kind kind-${log.kind}`}>{log.kind}</span>
+        <span>{log.meta}</span>
+        {updated && <span>updated {fmtDate(updated)}</span>}
+        {tags.length > 0 && <span>{tags.join(', ')}</span>}
+      </p>
+      <h1>{log.title}</h1>
+      <p class="summary dim">{log.summary}</p>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {linkedFrom.length > 0 && (
+      <aside class="linked" aria-labelledby="h-linked">
+        <SectionHead title="linked from" id="h-linked" />
+        <LogList logs={linkedFrom} />
+      </aside>
+    )}
+  </article>
+</Base>
+
+<style>
+  .head { max-width: 860px; padding-block: clamp(40px, 7vw, 80px) 28px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
+  .back { display: inline-block; margin-bottom: 28px; font-size: 13px; color: var(--mute); }
+  .back:hover { color: var(--amber); }
+  .meta { display: flex; flex-wrap: wrap; row-gap: 4px; font-size: 13px; }
+  .meta > * + *::before { content: '·'; margin-inline: 10px; color: var(--mute); }
+  h1 { margin-top: 14px; font-size: clamp(30px, 5.5vw, 56px); font-weight: 800; line-height: 1.02; letter-spacing: -0.05em; }
+  .summary { max-width: 60ch; margin-top: 18px; font-size: clamp(15px, 1.8vw, 18px); }
+
+  .prose { max-width: var(--measure); font-size: 16px; line-height: 1.75; }
+  .prose :global(:is(p, ul, ol, blockquote, pre, table)) { margin: 0 0 1.3em; }
+  .prose :global(:is(h2, h3)) { margin: 2em 0 0.7em; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
+  .prose :global(h2) { font-size: 21px; }
+  .prose :global(h3) { font-size: 17px; }
+  .prose :global(h2::before) { content: '## '; color: var(--mute); font-weight: 500; }
+  .prose :global(h3::before) { content: '### '; color: var(--mute); font-weight: 500; }
+  .prose :global(a) { color: var(--amber); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+  .prose :global(a:hover) { text-decoration-thickness: 2px; }
+  .prose :global(a.wikilink) { text-decoration-style: dotted; }
+  .prose :global(strong) { font-weight: 700; }
+  .prose :global(ul) { list-style: none; padding-left: 2ch; }
+  .prose :global(ul > li::before) { content: '- '; margin-left: -2ch; color: var(--amber); }
+  .prose :global(ol) { padding-left: 3ch; }
+  .prose :global(li) { margin-bottom: 0.4em; }
+  .prose :global(blockquote) { margin-left: 0; padding-left: 18px; border-left: 2px solid var(--amber); color: var(--dim); }
+  .prose :global(code) { font-family: inherit; font-size: 0.92em; padding: 0.1em 0.35em; background: var(--bg-2); border: 1px solid var(--line); }
+  .prose :global(pre) { padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid var(--line); }
+  .prose :global(pre code) { padding: 0; font-size: inherit; background: none; border: 0; }
+  .prose :global(table) { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14px; }
+  .prose :global(:is(th, td)) { padding: 8px 16px 8px 0; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .prose :global(th) { color: var(--mute); font-weight: 600; }
+  .prose :global(td) { font-variant-numeric: tabular-nums; }
+  .prose :global(hr) { margin: 2.5em 0; border: 0; border-top: 1px solid var(--line); }
+
+  .linked { max-width: 860px; }
+</style>

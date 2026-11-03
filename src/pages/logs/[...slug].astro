@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import LogLayout from '../../layouts/LogLayout.astro';
+import { getLogs } from '../../lib/content';
+import { backlinks } from '../../lib/logs';
+
+export async function getStaticPaths() {
+  const logs = await getLogs();
+  return logs.map((log) => ({
+    params: { slug: log.id },
+    props: { log, linkedFrom: backlinks(log, logs) },
+  }));
+}
+
+const { log, linkedFrom } = Astro.props;
+const { Content } = await render(log.entry);
+---
+<LogLayout log={log} linkedFrom={linkedFrom}>
+  <Content />
+</LogLayout>
