@@ -6,12 +6,10 @@ import { wikilinks } from './src/lib/wikilinks.mjs';
 export default defineConfig({
   site: 'https://yuri.dev',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  // /cv/ only exists to render the PDF, so it stays out of the sitemap.
+  integrations: [sitemap({ filter: (page) => !page.includes('/cv/') })],
   markdown: {
     remarkPlugins: [wikilinks],
-    shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark' },
-      wrap: false,
-    },
+    shikiConfig: { theme: 'vesper', wrap: false },
   },
 });
