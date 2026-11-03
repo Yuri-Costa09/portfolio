@@ -13,7 +13,7 @@ const { items } = Astro.props;
     {items.map((i) => (
       <li>
         <a href={i.href}>
-          <time class="mute" datetime={i.date.toISOString()}>{fmtDate(i.date)}</time>
+          <time class="mute" datetime={i.date.toISOString()}>{i.kind === 'job' ? fmtDate(i.date).slice(0, 7) : fmtDate(i.date)}</time>
           <span class={`kind kind-${i.kind}`}>{i.kind}</span>
           <span class="label">{i.label}</span>
         </a>

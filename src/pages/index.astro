@@ -52,7 +52,7 @@ const num = (key: string) => sections.indexOf(key) + 1;
     <section id="logs" aria-labelledby="h-logs">
       <SectionHead n={num('logs')} title="logs" id="h-logs">{logs.length} entries · <a href="/rss.xml">rss</a></SectionHead>
       <LogList logs={logs.slice(0, 6)} />
-      <a class="more" href="/logs/">→ all logs</a>
+      {logs.length > 0 && <a class="more" href="/logs/">→ all logs</a>}
     </section>
 
     <section id="links" aria-labelledby="h-links">
