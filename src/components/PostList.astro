@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { fmtDate } from '../lib/content';
+interface Props { posts: CollectionEntry<'posts'>[] }
+const { posts } = Astro.props;
+---
+<ul class="posts">
+  {posts.map((p) => (
+    <li>
+      <a href={`/writing/${p.id}/`}>
+        <time class="tnum muted" datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+        <span class="t">{p.data.title}</span>
+        <span class="d muted">{p.data.description}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .posts { list-style: none; margin: 0; padding: 0; }
+  li { border-bottom: 1px solid var(--rule); }
+  a {
+    display: grid; grid-template-columns: 9rem 1fr; gap: 4px 24px;
+    padding: 22px 0; text-decoration: none;
+  }
+  time { font-size: 0.95rem; padding-top: 0.35em; }
+  .t {
+    font-stretch: 112%; font-weight: 750; font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+    line-height: 1.15; letter-spacing: -0.01em;
+  }
+  .d { grid-column: 2; max-width: var(--measure); }
+  a:hover .t { color: var(--blue-text); }
+  @media (max-width: 640px) {
+    a { grid-template-columns: 1fr; }
+    .d { grid-column: 1; }
+  }
+</style>

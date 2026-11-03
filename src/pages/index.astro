@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import LatencyLadder from '../components/LatencyLadder.astro';
+import PostList from '../components/PostList.astro';
+import NoteList from '../components/NoteList.astro';
+import ProjectList from '../components/ProjectList.astro';
+import { site } from '../config';
+import { getPosts, getNotes, getProjects } from '../lib/content';
+
+const posts = (await getPosts()).slice(0, 4);
+const notes = (await getNotes()).slice(0, 6);
+const projects = (await getProjects()).slice(0, 3);
+---
+<Base current="home">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="who">
+        <h1 class="display name">{site.name}</h1>
+        <p class="intro">{site.intro}</p>
+        <p class="ctas">
+          <a href="/writing/">Read the writing</a>
+          <a href="/cv/">See the CV</a>
+        </p>
+      </div>
+      <LatencyLadder />
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="h-writing">
+    <div class="section-head">
+      <h2 id="h-writing" class="display">Writing</h2>
+      <a href="/writing/">All posts</a>
+    </div>
+    <PostList posts={posts} />
+  </section>
+
+  <section class="section wrap" aria-labelledby="h-notes">
+    <div class="section-head">
+      <h2 id="h-notes" class="display">Notes</h2>
+      <a href="/notes/">All notes</a>
+    </div>
+    <p class="lede muted">Short notes that keep changing as I learn. Smaller than posts, linked to each other.</p>
+    <NoteList notes={notes} />
+  </section>
+
+  <section class="section wrap" aria-labelledby="h-projects">
+    <div class="section-head">
+      <h2 id="h-projects" class="display">Projects</h2>
+      <a href="/projects/">All projects</a>
+    </div>
+    <ProjectList projects={projects} />
+  </section>
+</Base>
+
+<style>
+  .hero { background: var(--blue); color: var(--on-blue); padding-block: clamp(40px, 7vw, 88px) clamp(44px, 7vw, 80px); }
+  .hero a:hover { color: var(--signal); }
+  .hero-grid { display: grid; gap: clamp(40px, 6vw, 72px); }
+  .name {
+    font-size: clamp(5.5rem, 30vw, 19rem);
+    font-weight: 900; line-height: 0.78; letter-spacing: -0.045em;
+    margin-left: -0.04em;
+  }
+  .intro {
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem); line-height: 1.35; font-weight: 500;
+    max-width: 34ch; margin: clamp(20px, 3vw, 32px) 0 0;
+  }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 0; }
+  .ctas a {
+    text-decoration: none; font-weight: 700; padding: 11px 20px;
+    border: 2px solid var(--on-blue); border-radius: 999px;
+  }
+  .ctas a:first-child { background: var(--on-blue); color: var(--blue); }
+  .ctas a:hover { background: var(--signal); border-color: var(--signal); color: #0d1233; }
+
+  @media (min-width: 1000px) {
+    .hero-grid { grid-template-columns: 1fr 1fr; align-items: end; }
+    .name { font-size: clamp(8rem, 15vw, 15rem); }
+  }
+
+  .lede { margin: 12px 0 24px; max-width: var(--measure); }
+</style>

@@ -1,0 +1,15 @@
+---
+import ListPage from '../../layouts/ListPage.astro';
+import NoteList from '../../components/NoteList.astro';
+import { getNotes } from '../../lib/content';
+const notes = await getNotes();
+---
+<ListPage
+  title="Notes"
+  lede="A working notebook. Seedlings are rough, growing notes are taking shape, evergreen notes I stand behind."
+  current="notes"
+>
+  <div class="pad"><NoteList notes={notes} /></div>
+</ListPage>
+
+<style>.pad { margin-top: 32px; }</style>

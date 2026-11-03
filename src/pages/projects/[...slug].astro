@@ -1,0 +1,21 @@
+---
+import { render } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+import { getProjects } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+const { project } = Astro.props;
+const { Content } = await render(project);
+const statusText = { active: 'In progress', paused: 'Paused', done: 'Shipped' } as const;
+---
+<Article title={project.data.title} description={project.data.summary} current="projects" back={{ href: '/projects/', label: 'All projects' }}>
+  <Fragment slot="meta">
+    <span>{statusText[project.data.status]}</span>
+    <span>{project.data.stack.join(', ')}</span>
+    {project.data.repo && <a href={project.data.repo}>Source code</a>}
+  </Fragment>
+  <Content />
+</Article>

@@ -1,0 +1,45 @@
+---
+import { render } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+import { getNotes, fmtDate, statusLabel } from '../../lib/content';
+import { slugify } from '../../lib/wikilinks.mjs';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note, notes } }));
+}
+const { note, notes } = Astro.props;
+const { Content } = await render(note);
+
+// Backlinks: every note whose body links here with [[...]].
+const linksTo = (body = '') =>
+  [...body.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)].map((m) => slugify(m[1]));
+const backlinks = notes.filter((n) => n.id !== note.id && linksTo(n.body).includes(note.id));
+---
+<Article title={note.data.title} description={note.data.summary} current="notes" back={{ href: '/notes/', label: 'All notes' }}>
+  <Fragment slot="meta">
+    <span>{statusLabel[note.data.status]}</span>
+    <span>Updated <time datetime={note.data.updated.toISOString()}>{fmtDate(note.data.updated)}</time></span>
+  </Fragment>
+  <Content />
+  <aside slot="after" class="backlinks" aria-labelledby="bl">
+    {backlinks.length > 0 && (
+      <>
+        <h2 id="bl">Linked from</h2>
+        <ul>
+          {backlinks.map((b) => (
+            <li><a href={`/notes/${b.id}/`}>{b.data.title}</a> <span class="muted">{b.data.summary}</span></li>
+          ))}
+        </ul>
+      </>
+    )}
+  </aside>
+</Article>
+
+<style>
+  .backlinks { max-width: var(--measure); margin-top: 56px; }
+  .backlinks:empty { display: none; }
+  h2 { font-size: 1.1rem; font-weight: 700; padding-top: 16px; border-top: 1px solid var(--rule); margin-bottom: 12px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  a { font-weight: 700; }
+</style>

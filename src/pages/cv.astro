@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config';
+import { cv } from '../data/cv';
+---
+<Base title="CV" description={cv.summary} current="cv">
+  <div class="wrap cv">
+    <header class="top">
+      <div>
+        <h1 class="display">{site.name}</h1>
+        <p class="headline">{cv.headline}</p>
+        <p class="muted">{cv.location}</p>
+      </div>
+      <div class="actions">
+        <a class="pdf" href="/cv.pdf" download>Download PDF</a>
+        <ul class="contact">
+          <li><a href={`mailto:${site.links.email}`}>{site.links.email}</a></li>
+          <li><a href={site.links.github}>{site.links.github.replace('https://', '')}</a></li>
+          <li><a href={site.links.linkedin}>{site.links.linkedin.replace('https://www.', '')}</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section class="row">
+      <h2>Profile</h2>
+      <p class="summary">{cv.summary}</p>
+    </section>
+
+    <section class="row">
+      <h2>Experience</h2>
+      <div class="jobs">
+        {cv.experience.map((job) => (
+          <div class="job">
+            <div class="job-head">
+              <h3>{job.role}, {job.org}</h3>
+              <span class="muted tnum">{job.period}</span>
+            </div>
+            <ul>{job.bullets.map((b) => <li>{b}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="row">
+      <h2>Skills</h2>
+      <dl class="skills">
+        {cv.skills.map((s) => (
+          <>
+            <dt>{s.area}</dt>
+            <dd>{s.items.join(', ')}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+
+    {cv.education.length > 0 && (
+      <section class="row">
+        <h2>Education</h2>
+        <div>
+          {cv.education.map((e) => (
+            <div class="job-head"><h3>{e.degree}, {e.school}</h3><span class="muted">{e.period}</span></div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="row">
+      <h2>Languages</h2>
+      <dl class="skills">
+        {cv.languages.map((l) => (
+          <>
+            <dt>{l.name}</dt>
+            <dd>{l.level}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .cv { padding-top: clamp(40px, 7vw, 88px); }
+  .top {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px;
+    padding-bottom: 28px; border-bottom: 3px solid var(--ink);
+  }
+  h1 { font-size: clamp(4rem, 14vw, 10rem); font-weight: 900; line-height: 0.8; letter-spacing: -0.045em; margin-left: -0.03em; }
+  .headline { font-size: clamp(1.2rem, 2.2vw, 1.6rem); font-weight: 600; margin: 20px 0 4px; }
+  .top p.muted { margin: 0; }
+  .actions { display: grid; gap: 16px; justify-items: start; }
+  .pdf {
+    text-decoration: none; font-weight: 700; padding: 11px 20px; border-radius: 999px;
+    background: var(--blue); color: var(--on-blue);
+  }
+  .pdf:hover { background: var(--ink); color: var(--paper); }
+  .contact { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 0.95rem; }
+
+  .row {
+    display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 12px 32px;
+    padding-block: 32px; border-bottom: 1px solid var(--rule);
+  }
+  .row h2 { font-size: 1.05rem; font-weight: 700; padding-top: 4px; }
+  .summary { font-size: 1.2rem; line-height: 1.5; margin: 0; max-width: 60ch; }
+
+  .jobs { display: grid; gap: 28px; }
+  .job-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; align-items: baseline; }
+  h3 { font-stretch: 112%; font-weight: 750; font-size: 1.3rem; }
+  .job ul { margin: 10px 0 0; padding-left: 1.1em; max-width: 68ch; }
+  .job li { margin-bottom: 6px; }
+
+  .skills { display: grid; grid-template-columns: 9rem 1fr; gap: 8px 24px; margin: 0; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr; }
+    .skills { grid-template-columns: 1fr; gap: 2px; }
+    dd { margin-bottom: 10px; }
+  }
+
+  @media print {
+    :global(.site-header), :global(.site-footer), .pdf, :global(.skip) { display: none !important; }
+    :global(:root) {
+      --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --blue: #1b2df0; --blue-text: #1424c9;
+    }
+    :global(body) { font-size: 10.5pt; }
+    .cv { padding: 0; max-width: none; }
+    h1 { font-size: 54pt; }
+    .row { padding-block: 14px; grid-template-columns: 9rem 1fr; break-inside: avoid; }
+    .job { break-inside: avoid; }
+    a { text-decoration: none; }
+  }
+  @page { margin: 16mm 16mm; }
+</style>

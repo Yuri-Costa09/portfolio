@@ -1,0 +1,71 @@
+---
+import Base from './Base.astro';
+interface Props {
+  title: string;
+  description?: string;
+  current: 'writing' | 'notes' | 'projects';
+  back: { href: string; label: string };
+}
+const { title, description, current, back } = Astro.props;
+---
+<Base title={title} description={description} current={current}>
+  <article class="wrap article">
+    <header class="head">
+      <a class="back" href={back.href}>{back.label}</a>
+      <h1 class="display">{title}</h1>
+      {description && <p class="desc">{description}</p>}
+      <div class="meta muted"><slot name="meta" /></div>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+    <slot name="after" />
+  </article>
+</Base>
+
+<style>
+  .article { padding-top: clamp(40px, 7vw, 88px); }
+  .head { max-width: 900px; padding-bottom: 28px; border-bottom: 3px solid var(--ink); margin-bottom: 40px; }
+  .back { display: inline-block; font-weight: 600; margin-bottom: 24px; }
+  h1 { font-size: clamp(2.4rem, 6.5vw, 4.75rem); line-height: 0.98; }
+  .desc { font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.4; margin: 20px 0 0; max-width: 46ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 18px; font-size: 0.95rem; }
+  .meta:empty { display: none; }
+
+  .prose {
+    font-family: var(--serif); font-size: 1.1875rem; line-height: 1.68;
+    max-width: var(--measure);
+  }
+  .prose :global(p), .prose :global(ul), .prose :global(ol), .prose :global(blockquote), .prose :global(pre), .prose :global(table) { margin: 0 0 1.25em; }
+  .prose :global(h2), .prose :global(h3) {
+    font-family: var(--display); font-stretch: 112%; font-weight: 800;
+    letter-spacing: -0.01em; line-height: 1.15; margin: 1.9em 0 0.6em;
+  }
+  .prose :global(h2) { font-size: 1.65rem; }
+  .prose :global(h3) { font-size: 1.3rem; }
+  .prose :global(a) { color: var(--blue-text); }
+  .prose :global(a.wikilink) { text-decoration-style: dotted; }
+  .prose :global(li) { margin-bottom: 0.35em; }
+  .prose :global(blockquote) { margin-left: 0; padding-left: 20px; border-left: 4px solid var(--blue); font-style: italic; }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.86em; background: var(--paper-2); padding: 0.1em 0.35em; border-radius: 3px; }
+  .prose :global(pre) {
+    font-size: 0.95rem; line-height: 1.55; padding: 18px 20px; overflow-x: auto;
+    border: 1px solid var(--rule); border-radius: 4px;
+    max-width: min(100vw - 2 * var(--gutter), 860px);
+  }
+  .prose :global(pre code) { background: none; padding: 0; font-size: inherit; }
+  .prose :global(table) { border-collapse: collapse; font-family: var(--display); font-size: 0.95rem; width: 100%; }
+  .prose :global(th), .prose :global(td) { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); }
+  .prose :global(th) { font-weight: 700; }
+  .prose :global(td:last-child), .prose :global(th:last-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .prose :global(hr) { border: 0; border-top: 1px solid var(--rule); margin: 2.5em 0; }
+</style>
+
+<style is:global>
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .astro-code,
+    :root:not([data-theme='light']) .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
+  }
+  :root[data-theme='dark'] .astro-code,
+  :root[data-theme='dark'] .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
+</style>
