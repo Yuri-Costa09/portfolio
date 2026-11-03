@@ -3,11 +3,11 @@ export const site = {
   name: 'Yuri',
   title: 'Yuri Costa — software engineer',
   description:
-    'Software engineer building event-driven Go and Java payment services at Mercado Pago. Writing to understand how programs actually run.',
+    'Software engineer building event-driven Go and Java payment services at Mercado Pago. Fascinated by backend and distributed systems.',
   // The "// ..." line above the name.
   tagline: 'software engineer · distributed systems · payments',
   intro:
-    'Event-driven Go and Java microservices for payment processing at Mercado Pago, 20M+ transactions a day. I write to understand how programs actually run, from the cache line to the network.',
+    'Event-driven Go and Java microservices for payment processing at Mercado Pago, 20M+ transactions a day. Fascinated by backend and distributed systems.',
   // Optional status with a green dot, e.g. 'open to work'. Leave undefined to hide it.
   available: undefined as string | undefined,
   facts: ['São Paulo / Santos, BR'],
