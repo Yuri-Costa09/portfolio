@@ -40,7 +40,9 @@ Em um sistema saudável, esse número fica perto de 99% ou mais. Se ele cai, o b
 
 ## Working Set: o que você realmente usa
 
-Aqui entra a distinção que muita gente perde. **Working set** é a quantidade de dados que o banco precisa tocar para atender as operações em um intervalo de tempo (24 h, 1 h, 15 min...).
+Aqui entra a distinção que muita gente perde. **Working set** é um conceito mais amplo, da ciência da computação. Em sistemas operacionais, é a quantidade de memória que um processo precisa ter carregada em um intervalo de tempo para terminar uma operação.
+
+Em banco de dados, working set é a quantidade de dados que o banco precisa tocar para atender as operações em um intervalo de tempo (24 h, 1 h, 15 min...).
 
 Ele é diferente do tamanho total do banco. Um banco de 1 TB pode ter um working set de 50 GB, porque a maioria dos acessos recai sobre uma fração pequena dos dados: pedidos recentes, usuários ativos, os índices mais consultados.
 
