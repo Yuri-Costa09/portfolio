@@ -86,5 +86,6 @@ Antes do primeiro deploy, troque `site` em `astro.config.mjs` pelo seu domínio.
 ## Já incluso
 
 - RSS em `/rss.xml` (posts e notas) e sitemap
+- Imagem de prévia de link (LinkedIn, X, WhatsApp) gerada no build para cada log e para o site (`src/lib/og.ts`)
 - Destaque de código com o tema `vesper`
 - 404 no estilo terminal

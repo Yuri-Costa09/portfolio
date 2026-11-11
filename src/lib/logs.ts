@@ -66,6 +66,10 @@ const WIKILINK = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
 
 export const logHref = (id: string) => `/logs/${id}/`;
 
+// Link preview image of a log page, in its language (rendered by src/pages/og/[...slug].png.ts).
+export const ogHref = (id: string, lang: Lang = DEFAULT_LANG) =>
+  `/og/${id}${lang === DEFAULT_LANG ? '' : `/${lang}`}.png`;
+
 export const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
 
 export function parseDay(s: string): Date {

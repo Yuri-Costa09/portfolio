@@ -3,7 +3,7 @@ import Base from './Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import LogList from '../components/LogList.astro';
 import type { Log, Translation, Version } from '../lib/logs';
-import { fmtDate, localize, LANGS } from '../lib/logs';
+import { fmtDate, localize, ogHref, LANGS } from '../lib/logs';
 
 interface Props {
   log: Log;
@@ -16,7 +16,15 @@ const page = localize(log, translation);
 const tags = log.entry.data.tags ?? [];
 const updated = log.kind === 'post' ? log.entry.data.updated : undefined;
 ---
-<Base title={page.title} description={page.summary} current="logs" lang={page.lang} alternates={versions}>
+<Base
+  title={page.title}
+  description={page.summary}
+  current="logs"
+  lang={page.lang}
+  alternates={versions}
+  image={ogHref(log.id, page.lang)}
+  type="article"
+>
   <article class="wrap">
     <header class="head">
       <div class="top">

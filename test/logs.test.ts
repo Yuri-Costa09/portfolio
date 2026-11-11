@@ -14,6 +14,7 @@ import {
   readTranslations,
   versionsOf,
   localize,
+  ogHref,
 } from '../src/lib/logs.ts';
 
 const post = (id: string, date: string, body = 'word '.repeat(440)) => ({
@@ -169,4 +170,9 @@ test('localize: translated title, summary and reading time; a note keeps its sta
   const [tp, tn] = readTranslations([tr('pt-br/p', 'palavra '.repeat(660)), tr('pt-br/n')], ['p', 'n']);
   assert.deepEqual(localize(p, tp), { lang: 'pt-br', title: 'T pt-br/p', summary: 'D pt-br/p', meta: '3 min' });
   assert.equal(localize(n, tn).meta, 'growing');
+});
+
+test('ogHref: one preview image per language', () => {
+  assert.equal(ogHref('mvcc'), '/og/mvcc.png');
+  assert.equal(ogHref('mvcc', 'pt-br'), '/og/mvcc/pt-br.png');
 });

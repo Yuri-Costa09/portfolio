@@ -14,9 +14,22 @@ interface Props {
   lang?: Lang;
   // Every language version of this page, default first (only for translated logs).
   alternates?: Version[];
+  // Link preview image (1200×630). Logs pass their own; everything else uses /og.png.
+  image?: string;
+  type?: 'website' | 'article';
 }
-const { title, description = site.description, current = 'home', lang = DEFAULT_LANG, alternates = [] } = Astro.props;
+const {
+  title,
+  description = site.description,
+  current = 'home',
+  lang = DEFAULT_LANG,
+  alternates = [],
+  image = '/og.png',
+  type = 'website',
+} = Astro.props;
 const abs = (href: string) => new URL(href, Astro.site).href;
+const canonical = abs(Astro.url.pathname);
+const locale = { en: 'en_US', 'pt-br': 'pt_BR' }[lang];
 const pageTitle = title ? `${title} · ${site.name}` : site.title;
 const nav = [
   { href: '/logs/', label: 'logs', key: 'logs' },
@@ -38,8 +51,18 @@ const year = new Date().getFullYear();
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
     {alternates.map((a) => <link rel="alternate" hreflang={LANGS[a.lang]} href={abs(a.href)} />)}
     {alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={abs(alternates[0].href)} />}
-    <meta property="og:title" content={pageTitle} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="yuricosta.dev" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:title" content={title ?? site.title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={abs(image)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title ?? site.title} />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
