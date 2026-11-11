@@ -42,7 +42,7 @@ In a healthy system, this sits around 99% or higher. When it drops, the database
 
 ## Working Set: What You Actually Use
 
-This is the distinction many people miss. The **working set** is a broader concept from computer science. In operating systems, it's the amount of memory a process needs to have loaded over a time window to finish an operation.
+This is an important distinction, and most people don't even know the concept exists. The **working set** is a broader concept from computer science. In operating systems, it's the amount of memory a process needs to have loaded over a time window to finish an operation.
 
 In databases, the working set is the amount of data the database needs to touch to serve operations over a time window (24 h, 1 h, 15 min...).
 

@@ -40,7 +40,7 @@ Em um sistema saudável, esse número fica perto de 99% ou mais. Se ele cai, o b
 
 ## Working Set: o que você realmente usa
 
-Aqui entra a distinção que muita gente perde. **Working set** é um conceito mais amplo, da ciência da computação. Em sistemas operacionais, é a quantidade de memória que um processo precisa ter carregada em um intervalo de tempo para terminar uma operação.
+Aqui entra uma distinção importante, e a maioria das pessoas nem sabe que esse conceito existe. **Working set** é um conceito mais amplo, da ciência da computação. Em sistemas operacionais, é a quantidade de memória que um processo precisa ter carregada em um intervalo de tempo para terminar uma operação.
 
 Em banco de dados, working set é a quantidade de dados que o banco precisa tocar para atender as operações em um intervalo de tempo (24 h, 1 h, 15 min...).
 
