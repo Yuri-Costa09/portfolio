@@ -20,6 +20,7 @@ npm run build    # gera dist/
 | Contribuições open source | `src/data/oss.ts` |
 | Posts | `src/content/posts/*.md` |
 | Notas | `src/content/notes/*.md` |
+| Traduções (pt-br) | `src/content/translations/pt-br/*.md` |
 | Cores e fonte | `src/styles/global.css` (tokens no topo) |
 
 Procure por `TODO` para achar o que precisa preencher.
@@ -42,6 +43,17 @@ summary: Uma frase.
 status: seedling   # seedling | growing | evergreen
 updated: 2026-11-02
 ```
+
+## Traduções
+
+O site é em inglês. Para ter um log também em português, crie `src/content/translations/pt-br/<mesmo-nome-do-arquivo>.md`:
+
+```yaml
+title: Título em português
+description: A frase de resumo em português.
+```
+
+A tradução vira `/logs/<nome>/pt-br/` e as duas versões ganham um seletor `en | pt-br` no topo. Data, tags e status vêm do original. Se o nome não bater com nenhum post ou nota, o build para dizendo qual arquivo está errado. A lista de idiomas fica em `LANGS`, em `src/lib/logs.ts`.
 
 ## Open source
 

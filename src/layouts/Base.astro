@@ -4,13 +4,19 @@ import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { site } from '../config';
 import { contributions } from '../data/oss';
+import { LANGS, DEFAULT_LANG } from '../lib/logs';
+import type { Lang, Version } from '../lib/logs';
 
 interface Props {
   title?: string;
   description?: string;
   current?: 'home' | 'logs';
+  lang?: Lang;
+  // Every language version of this page, default first (only for translated logs).
+  alternates?: Version[];
 }
-const { title, description = site.description, current = 'home' } = Astro.props;
+const { title, description = site.description, current = 'home', lang = DEFAULT_LANG, alternates = [] } = Astro.props;
+const abs = (href: string) => new URL(href, Astro.site).href;
 const pageTitle = title ? `${title} · ${site.name}` : site.title;
 const nav = [
   { href: '/logs/', label: 'logs', key: 'logs' },
@@ -21,7 +27,7 @@ const nav = [
 const year = new Date().getFullYear();
 ---
 <!doctype html>
-<html lang="en">
+<html lang={LANGS[lang]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,6 +36,8 @@ const year = new Date().getFullYear();
     <meta name="theme-color" content="#0b0b0a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+    {alternates.map((a) => <link rel="alternate" hreflang={LANGS[a.lang]} href={abs(a.href)} />)}
+    {alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={abs(alternates[0].href)} />}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
   </head>

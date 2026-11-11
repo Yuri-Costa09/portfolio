@@ -1,5 +1,5 @@
 import { getCollection } from 'astro:content';
-import { mergeLogs, buildTimeline } from './logs';
+import { mergeLogs, buildTimeline, readTranslations } from './logs';
 import { contributions } from '../data/oss';
 import { experience } from '../data/experience';
 
@@ -17,6 +17,14 @@ export async function getNotes() {
 // Posts and notes as one feed, newest first. Throws if a slug exists in both.
 export async function getLogs() {
   return mergeLogs(await getPosts(), await getNotes());
+}
+
+// Translations of published logs. Checked against every post and note, drafts included:
+// a typo fails the build, while the translation of a draft just waits for it.
+export async function getTranslations() {
+  const all = [...(await getCollection('posts')), ...(await getCollection('notes'))].map((e) => e.id);
+  const published = new Set((await getLogs()).map((l) => l.id));
+  return readTranslations(await getCollection('translations', live), all).filter((t) => published.has(t.of));
 }
 
 // Logs, contributions and job starts, newest first (the hero's `tail ~/log`).

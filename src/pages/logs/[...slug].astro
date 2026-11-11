@@ -1,20 +1,27 @@
 ---
 import { render } from 'astro:content';
 import LogLayout from '../../layouts/LogLayout.astro';
-import { getLogs } from '../../lib/content';
-import { backlinks } from '../../lib/logs';
+import { getLogs, getTranslations } from '../../lib/content';
+import { backlinks, versionsOf } from '../../lib/logs';
 
+// /logs/<slug>/ in English, plus /logs/<slug>/<lang>/ for each translation.
 export async function getStaticPaths() {
   const logs = await getLogs();
-  return logs.map((log) => ({
-    params: { slug: log.id },
-    props: { log, linkedFrom: backlinks(log, logs) },
-  }));
+  const translations = await getTranslations();
+  return logs.flatMap((log) => {
+    const shared = { log, linkedFrom: backlinks(log, logs), versions: versionsOf(log, translations) };
+    return [
+      { params: { slug: log.id }, props: { ...shared, translation: undefined } },
+      ...translations
+        .filter((t) => t.of === log.id)
+        .map((translation) => ({ params: { slug: `${log.id}/${translation.lang}` }, props: { ...shared, translation } })),
+    ];
+  });
 }
 
-const { log, linkedFrom } = Astro.props;
-const { Content } = await render(log.entry);
+const { log, linkedFrom, versions, translation } = Astro.props;
+const { Content } = await render(translation?.entry ?? log.entry);
 ---
-<LogLayout log={log} linkedFrom={linkedFrom}>
+<LogLayout log={log} linkedFrom={linkedFrom} versions={versions} translation={translation}>
   <Content />
 </LogLayout>

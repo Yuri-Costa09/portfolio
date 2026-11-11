@@ -11,6 +11,9 @@ import {
   backlinks,
   buildTimeline,
   ossSummary,
+  readTranslations,
+  versionsOf,
+  localize,
 } from '../src/lib/logs.ts';
 
 const post = (id: string, date: string, body = 'word '.repeat(440)) => ({
@@ -126,4 +129,44 @@ test('ossSummary: merged count and distinct repos', () => {
   const c = (repo: string, status: 'merged' | 'open') => ({ repo, status });
   assert.equal(ossSummary([c('a/x', 'merged'), c('a/x', 'merged'), c('b/y', 'open')]), '2 merged · 2 repos');
   assert.equal(ossSummary([c('a/x', 'merged')]), '1 merged · 1 repo');
+});
+
+const tr = (id: string, body = '') => ({ id, body, data: { title: `T ${id}`, description: `D ${id}` } });
+
+test('readTranslations: translations/<lang>/<slug>.md, pointing at an existing log', () => {
+  const [pt] = readTranslations([tr('pt-br/mvcc')], ['mvcc']);
+  assert.equal(pt.lang, 'pt-br');
+  assert.equal(pt.of, 'mvcc');
+  assert.equal(pt.href, '/logs/mvcc/pt-br/');
+  assert.equal(pt.title, 'T pt-br/mvcc');
+  assert.equal(pt.summary, 'D pt-br/mvcc');
+  assert.throws(
+    () => readTranslations([tr('pt-br/nope')], ['mvcc']),
+    /Translation "pt-br\/nope" points to "nope", which is not a post or note\./,
+  );
+  for (const bad of ['fr/mvcc', 'en/mvcc', 'mvcc']) {
+    assert.throws(
+      () => readTranslations([tr(bad)], ['mvcc']),
+      /must be at translations\/<lang>\/<slug>\.md, with <lang> one of: pt-br\./,
+    );
+  }
+});
+
+test('versionsOf: default language first, nothing for an untranslated log', () => {
+  const logs = mergeLogs([post('a', '2026-10-20'), post('b', '2026-10-21')], []);
+  const ts = readTranslations([tr('pt-br/a')], ['a', 'b']);
+  const byId = (id: string) => logs.find((l) => l.id === id)!;
+  assert.deepEqual(versionsOf(byId('a'), ts), [
+    { lang: 'en', href: '/logs/a/' },
+    { lang: 'pt-br', href: '/logs/a/pt-br/' },
+  ]);
+  assert.deepEqual(versionsOf(byId('b'), ts), []);
+});
+
+test('localize: translated title, summary and reading time; a note keeps its status', () => {
+  const [p, n] = mergeLogs([post('p', '2026-10-20')], [note('n', '2026-10-19', '', 'growing')]);
+  assert.deepEqual(localize(p), { lang: 'en', title: 'Post p', summary: 'About p', meta: '2 min' });
+  const [tp, tn] = readTranslations([tr('pt-br/p', 'palavra '.repeat(660)), tr('pt-br/n')], ['p', 'n']);
+  assert.deepEqual(localize(p, tp), { lang: 'pt-br', title: 'T pt-br/p', summary: 'D pt-br/p', meta: '3 min' });
+  assert.equal(localize(n, tn).meta, 'growing');
 });

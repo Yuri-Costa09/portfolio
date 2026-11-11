@@ -161,3 +161,70 @@ export function ossSummary(list: { repo: string; status: 'merged' | 'open' }[]):
   const repos = new Set(list.map((c) => c.repo)).size;
   return `${merged} merged · ${repos} repo${repos === 1 ? '' : 's'}`;
 }
+
+// English is the default: /logs/<slug>/. A translation lives at
+// src/content/translations/<lang>/<slug>.md and is served at /logs/<slug>/<lang>/.
+// Key: the URL segment. Value: the <html lang> tag.
+export const LANGS = { en: 'en', 'pt-br': 'pt-BR' } as const;
+export type Lang = keyof typeof LANGS;
+export const DEFAULT_LANG: Lang = 'en';
+
+export interface TranslationLike {
+  id: string; // '<lang>/<slug>'
+  body?: string;
+  data: { title: string; description: string };
+}
+
+export interface Translation<T extends TranslationLike = TranslationLike> {
+  lang: Lang;
+  of: string; // id of the translated post or note
+  title: string;
+  summary: string;
+  href: string;
+  body: string;
+  entry: T;
+}
+
+export interface Version {
+  lang: Lang;
+  href: string;
+}
+
+// A typo in the folder or file name fails the build instead of silently hiding the translation.
+export function readTranslations<T extends TranslationLike>(list: T[], logIds: string[]): Translation<T>[] {
+  const known = new Set(logIds);
+  const others = Object.keys(LANGS).filter((l) => l !== DEFAULT_LANG);
+  return list.map((t) => {
+    const [lang, ...rest] = t.id.split('/');
+    const of = rest.join('/');
+    if (!others.includes(lang) || !of) {
+      throw new Error(
+        `Translation "${t.id}" must be at translations/<lang>/<slug>.md, with <lang> one of: ${others.join(', ')}.`,
+      );
+    }
+    if (!known.has(of)) throw new Error(`Translation "${t.id}" points to "${of}", which is not a post or note.`);
+    return {
+      lang: lang as Lang,
+      of,
+      title: t.data.title,
+      summary: t.data.description,
+      href: `${logHref(of)}${lang}/`,
+      body: t.body ?? '',
+      entry: t,
+    };
+  });
+}
+
+// The language switch of one log. Empty when it has no translation, so no switch is shown.
+export function versionsOf(log: { id: string; href: string }, translations: Translation[]): Version[] {
+  const mine = translations.filter((t) => t.of === log.id);
+  if (mine.length === 0) return [];
+  return [{ lang: DEFAULT_LANG, href: log.href }, ...mine.map((t) => ({ lang: t.lang, href: t.href }))];
+}
+
+// What a log page shows in one language. Date, kind and tags always come from the original.
+export function localize(log: Log, t?: Translation) {
+  if (!t) return { lang: DEFAULT_LANG, title: log.title, summary: log.summary, meta: log.meta };
+  const meta = log.kind === 'post' ? `${readingTime(t.body)} min` : log.meta;
+  return { lang: t.lang, title: t.title, summary: t.summary, meta };
+}

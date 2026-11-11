@@ -28,4 +28,16 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { posts, notes };
+// A post or note in another language: src/content/translations/<lang>/<slug>.md,
+// where <slug> is the original's file name. Served at /logs/<slug>/<lang>/.
+// Date, tags and status come from the original.
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/translations' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts, notes, translations };

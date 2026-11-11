@@ -2,30 +2,47 @@
 import Base from './Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import LogList from '../components/LogList.astro';
-import type { Log } from '../lib/logs';
-import { fmtDate } from '../lib/logs';
+import type { Log, Translation, Version } from '../lib/logs';
+import { fmtDate, localize, LANGS } from '../lib/logs';
 
 interface Props {
   log: Log;
   linkedFrom: Log[];
+  versions: Version[];
+  translation?: Translation;
 }
-const { log, linkedFrom } = Astro.props;
+const { log, linkedFrom, versions, translation } = Astro.props;
+const page = localize(log, translation);
 const tags = log.entry.data.tags ?? [];
 const updated = log.kind === 'post' ? log.entry.data.updated : undefined;
 ---
-<Base title={log.title} description={log.summary} current="logs">
+<Base title={page.title} description={page.summary} current="logs" lang={page.lang} alternates={versions}>
   <article class="wrap">
     <header class="head">
-      <a class="back" href="/logs/">← cd ../logs</a>
+      <div class="top">
+        <a class="back" href="/logs/">← cd ../logs</a>
+        {versions.length > 0 && (
+          <nav class="langs" aria-label="Language">
+            {versions.map((v) => (
+              <a
+                href={v.href}
+                hreflang={LANGS[v.lang]}
+                lang={LANGS[v.lang]}
+                aria-current={v.lang === page.lang ? 'page' : undefined}
+              >{v.lang}</a>
+            ))}
+          </nav>
+        )}
+      </div>
       <p class="meta mute">
         <time datetime={log.date.toISOString()}>{fmtDate(log.date)}</time>
         <span class={`kind kind-${log.kind}`}>{log.kind}</span>
-        <span>{log.meta}</span>
+        <span>{page.meta}</span>
         {updated && <span>updated {fmtDate(updated)}</span>}
-        {tags.length > 0 && <span>{tags.join(', ')}</span>}
+        {tags.length > 0 && <span class="tags">{tags.join(', ')}</span>}
       </p>
-      <h1>{log.title}</h1>
-      <p class="summary dim">{log.summary}</p>
+      <h1>{page.title}</h1>
+      <p class="summary dim">{page.summary}</p>
     </header>
 
     <div class="prose">
@@ -43,10 +60,20 @@ const updated = log.kind === 'post' ? log.entry.data.updated : undefined;
 
 <style>
   .head { max-width: 860px; padding-block: clamp(40px, 7vw, 80px) 28px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
-  .back { display: inline-block; margin-bottom: 28px; font-size: 13px; color: var(--mute); }
+  .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 28px; }
+  .back { font-size: 13px; color: var(--mute); }
   .back:hover { color: var(--amber); }
+  .langs { display: inline-flex; border: 1px solid var(--line); font-size: 12px; }
+  .langs a { padding: 6px 12px; color: var(--mute); }
+  .langs a + a { border-left: 1px solid var(--line); }
+  .langs a:hover { color: var(--amber); }
+  .langs a[aria-current='page'] { background: var(--amber); color: var(--bg); font-weight: 700; }
   .meta { display: flex; flex-wrap: wrap; row-gap: 4px; font-size: 13px; }
   .meta > * + *::before { content: '·'; margin-inline: 10px; color: var(--mute); }
+  @media (max-width: 560px) {
+    .meta .tags { flex-basis: 100%; }
+    .meta .tags::before { content: none; }
+  }
   h1 { margin-top: 14px; font-size: clamp(30px, 5.5vw, 56px); font-weight: 800; line-height: 1.02; letter-spacing: -0.05em; }
   .summary { max-width: 60ch; margin-top: 18px; font-size: clamp(15px, 1.8vw, 18px); }
 
@@ -70,7 +97,8 @@ const updated = log.kind === 'post' ? log.entry.data.updated : undefined;
   .prose :global(pre) { padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid var(--line); }
   .prose :global(pre code) { padding: 0; font-size: inherit; background: none; border: 0; }
   .prose :global(table) { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14px; }
-  .prose :global(:is(th, td)) { padding: 8px 16px 8px 0; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .prose :global(:is(th, td)) { padding: 8px 16px 8px 0; text-align: left; vertical-align: top; line-height: 1.5; border-bottom: 1px solid var(--line); }
+  .prose :global(:is(th, td):first-child) { white-space: nowrap; }
   .prose :global(th) { color: var(--mute); font-weight: 600; }
   .prose :global(td) { font-variant-numeric: tabular-nums; }
   .prose :global(hr) { margin: 2.5em 0; border: 0; border-top: 1px solid var(--line); }
